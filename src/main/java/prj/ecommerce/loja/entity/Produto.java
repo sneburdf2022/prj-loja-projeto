@@ -14,6 +14,13 @@ public class Produto {
     private String descricao;
     private String informacao;
     private Integer aba;
+    private Integer imagem;
+    public Integer getImagem() {
+        return imagem;
+    }
+    public void setImagem(Integer imagem) {
+        this.imagem = imagem;
+    }
     private Float preco;
     private boolean ativo;
     public Integer getId() {

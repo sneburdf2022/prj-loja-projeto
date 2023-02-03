@@ -27,7 +27,7 @@ angular.module('produtoApp', []).controller('ProdutoController', function ($scop
   }
   $scope.editarProduto = function (x) {
     $scope.produto = x;
-    $scope.novoItem = true;
+   
   }
   $scope.cadastrarNovo = function(){
     $scope.novoItem = true;
@@ -49,6 +49,7 @@ angular.module('produtoApp', []).controller('ProdutoController', function ($scop
         url: url,
         data: $scope.produto
       }).then(function (response) {
+        $scope.limparForm();
         $scope.listarProduto();
       }, function (response) {
         $scope.listarProduto();
