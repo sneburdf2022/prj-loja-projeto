@@ -3,83 +3,115 @@ angular.module('produtoApp', []).controller('PgInicioController', function ($sco
     $scope.listaProduto = [];
     $scope.msg = "";
     $scope.produto = {
-      id : 0,
-      nome : "",
-      descricao : "",
-      informacao : "",
-      aba: 0,
-      preco : 0.0,
-      ativo : true
+        id: 0,
+        nome: "",
+        descricao: "",
+        informacao: "",
+        aba: 0,
+        preco: 0.0,
+        ativo: true,
+        imagem: 0
     }
-    $scope.listarProduto = function () {
-      $http.get("/api/produto/")
-        .then(function (response) {
-          console.log(response.data);
-          $scope.listaProduto = response.data;
-          $scope.novoItem = false;
-        });
+    $scope.carrinhoproduto = {
+        id: 0,
+        idProduto:0,
+        idCarrinho:0,
+        quantidade:0,
+        finalizado: false ,
+        nome: ""  ,
+        valor: 0,
+        imagem: 0
     }
-    $scope.limparAlerta = function () {
-      $scope.msg = "";
-      document.querySelector("#alerta").innerHTML = "";
-      document.querySelector("#alerta").classList.remove('alert-danger');
-      document.querySelector("#alerta").classList.remove('alert-success');
+    $scope.cliente = {
+        id: 1,
+        cpf: 12345678901,
+        email:'email@email.com.br',
+        nome: 'cliente unico por enquanto',
+        ativo: true
     }
-    $scope.editarProduto = function (x) {
-      $scope.produto = x;
-     
+    $scope.carrinho = {
+        id: 1,
+        idCliente: 1
     }
-    $scope.cadastrarNovo = function(){
-      $scope.novoItem = true;
+    $scope.valorCarrinho = 0;
+    $scope.adicionarProduto = function (produto) {
+        
+        let url = '/api/carrinhoproduto/';
+        let tipo = "POST";
+        $scope.carrinhoproduto.idProduto = produto.id;
+        $scope.carrinhoproduto.idCliente = 1;
+        $scope.carrinhoproduto.idCarrinho = 1;
+        $scope.carrinhoproduto.quantidade = 1;
+        $scope.carrinhoproduto.finalizado = false;
+        $scope.carrinhoproduto.id = 0;
+        $scope.carrinhoproduto.nome = produto.nome;
+        $scope.carrinhoproduto.valor= produto.preco;
+        $scope.carrinhoproduto.imagem= produto.imagem;
+        $http({
+            method: tipo,
+            url: url,
+            data: $scope.carrinhoproduto
+        }).then(function (response) { 
+            $scope.bucarValorCarrinho();           
+        }, function (response) {
+            console.log('Erro: ' + response)
+        })
+    }
+    $scope.bucarValorCarrinho = function(){
+            $http({
+                method: 'POST',
+                url: '/api/carrinhoproduto/valor/',
+                data: $scope.carrinho
+            }).then(function (response) {
+                $scope.valorCarrinho = response.data;                
+            }, function (response) {                
+                console.log('Erro: ' + response)
+            });
     }
     
-    $scope.gravarProduto = function () {
-      var itemLocal = $scope.produto;
-      $scope.limparAlerta();
-      let alerta = document.querySelector("#alerta");
-        $scope.msg = "";
-  
-        let url = '/api/produto/';
+    $scope.listarProduto = function () {
+        $http.get("/api/produto/")
+            .then(function (response) {
+                $scope.listaProduto = response.data;
+                $scope.novoItem = false;
+            });
+    }
+    $scope.bucarValorCarrinho();
+    $scope.adicionarCarrinho = function () {        
+        let url = '/api/carrinho/';
         let tipo = "POST";
-        if ($scope.produto.id > 0) {
-          tipo = "PUT";
+        if ($scope.carrinho.id > 0) {
+            tipo = "PUT";
         }
         $http({
-          method: tipo,
-          url: url,
-          data: $scope.produto
-        }).then(function (response) {
-          $scope.limparForm();
-          $scope.listarProduto();
+            method: tipo,
+            url: url,
+            data: $scope.carrinho
+        }).then(function (response) {            
         }, function (response) {
-          $scope.listarProduto();
-          console.log('Erro: ' + response)
+            console.log('Erro: ' + response)
         });
-        if (itemLocal.id > 0) {
-          alerta.innerHTML = "Novo produto adicionado!";
-        } else {
-          alerta.innerHTML = "Pergunta atualzada!";        
+    }
+    $scope.adicionarCliente = function () {
+        let url = '/api/cliente/';
+        let tipo = "POST";
+        if ($scope.cliente.id > 0) {
+            tipo = "PUT";
         }
-        alerta.classList.remove("alert-danger");
-        alerta.classList.add("alert-success");
-      
-  
+        $http({
+            method: tipo,
+            url: url,
+            data: $scope.cliente
+        }).then(function (response) {
+            console.log(response);
+            $scope.listarProduto();
+        }, function (response) {
+            $scope.listarProduto();
+            console.log('Erro: ' + response)
+        })
     }
-    $scope.limparForm = function () {
-      $scope.produto = null;
-      $scope.limparAlerta();
-    }
-    $scope.removerProduto = function (id) {
-      let url = '/api/produto/' + id;
-      $http({
-        method: "DELETE",
-        url: url
-      }).then(function (response) {
-        $scope.listarProduto();
-      }, function (response) {
-        $scope.listarProduto();
-        console.log('Erro: ' + response)
-      });
-    }
+    
+    $scope.adicionarCliente();
+    $scope.adicionarCarrinho();
     $scope.listarProduto();
-  });
+});

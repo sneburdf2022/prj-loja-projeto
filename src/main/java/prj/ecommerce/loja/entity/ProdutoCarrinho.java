@@ -12,6 +12,27 @@ public class ProdutoCarrinho {
     private Integer id;
     private Integer idProduto;
     private Integer idCarrinho;
+    private String nome;
+    private Float valor;
+    private Integer imagem;
+    public Integer getImagem() {
+        return imagem;
+    }
+    public void setImagem(Integer imagem) {
+        this.imagem = imagem;
+    }
+    public Float getValor() {
+        return valor;
+    }
+    public void setValor(Float valor) {
+        this.valor = valor;
+    }
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
     private Integer quantidade;
     private boolean finalizado;
     public Integer getId() {
