@@ -4,6 +4,6 @@
 ## Descrição
 * Projeto desenvilvido utilizando o VS Code da microsoft
 
-%## Frontend/Backend
+### Frontend/Backend
 * Frontend em AngularJs 2.0
 * Backend Java spring boot
